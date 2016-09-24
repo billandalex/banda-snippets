@@ -69,14 +69,67 @@ add_post_type_support( 'banda_snippets', 'post-formats' );
 
 
 
+
+
 // Add logic for github gists
-include dirname( __FILE__ ) .'functions/banda-snippets-gists.php';
+// include dirname( __FILE__ ) .'functions/_banda-snippets-gists.php';
+
+include('functions/_banda-snippets-gists.php');
 
 
+function banda_snippet_section_shortcode( $atts ) {
+    $a = shortcode_atts( array(
+        'section' => 'something'
+    ), $atts );
+
+    // $loop = new WP_Query( array(
+    // 'posts_per_page'    => 200,
+    // 'post_type'         => 'banda_snippets',
+    // 'orderby'           => 'menu_order title',
+    // 'order'             => 'ASC',
+    // 'tax_query'         => array( array(
+    //     'taxonomy'  => 'snippet_section',
+    //     'field'     => 'slug',
+    //     'terms'     => array( sanitize_title( $atts['section'] ) )
+    //     ) )
+    // ) );
+
+    $args = array(
+      'post_type' => 'banda_snippets',
+      'order' => 'ASC',
+      'tax_query' => array(array(
+          'taxonomy' => 'snippet_section',
+          'field' => 'slug',
+          'terms' => array( sanitize_title($atts['section']))
+      ))
+    );
+    $entries = new WP_Query( $args );
+    // var_dump($entries);
+
+    if ($entries->have_posts()) : while ($entries->have_posts()) : $entries->the_post();
+    the_content();
+    endwhile; endif;
+
+    wp_reset_postdata();
+}
+add_shortcode( 'snippet_section', 'banda_snippet_section_shortcode' );
+
+
+//  Add section taxonomy
+function snippet_section_init() {
+  // create section taxonomy
+    $args = array(
+        'show_admin_column' => true,
+        'label' => __( 'Sections' ),
+        // 'rewrite' => array( 'slug' => 'section' ),
+    );
+  register_taxonomy('snippet_section','banda_snippets',$args);
+}
+add_action( 'init', 'snippet_section_init' );
 
 
 // Add custom page template from plugin dir
-add_filter('page_template', 'banda_snippet_page_template');
+
 
 function banda_snippet_page_template($page_template) {
 
@@ -86,3 +139,5 @@ function banda_snippet_page_template($page_template) {
     }
     return $page_template;
 }
+
+add_filter('page_template', 'banda_snippet_page_template');

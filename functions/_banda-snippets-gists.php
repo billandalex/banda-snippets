@@ -10,7 +10,7 @@ function banda_snippets_code_custom_meta() {
 add_action( 'add_meta_boxes', 'banda_snippets_code_custom_meta' );
 
 /**
- * Outputs the content of the meta box
+ * Outputs the content of the meta box in the backend
  */
 function banda_snippets_code_meta_callback( $post ) {
     wp_nonce_field( basename( __FILE__ ), 'banda_snippets_code_nonce' );
@@ -59,5 +59,3 @@ function banda_snippets_custom_css() {
     }
   </style>';
 }
-
-?>

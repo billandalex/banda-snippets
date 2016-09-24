@@ -22,7 +22,7 @@ get_header(); ?>
                                     // $slug = $section->slug;
                                     //                     var_dump($slug);
                                         $args = array(
-                                          'post_type' => 'banda_snippets',
+                                          'post_type' => 'banda_snippet',
                                           'order' => 'ASC',
                                         );
                                         $entries = new WP_Query( $args );
